@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { screen } from "@testing-library/dom"
+import { screen, fireEvent } from "@testing-library/dom"
 import DashboardFormUI from "../views/DashboardFormUI.js"
 import { formatDate } from "../app/format.js"
 
@@ -56,6 +56,7 @@ describe('Given I am connected as an Admin and I am on Dashboard Page', () => {
     test(('Then, it should show button and textArea'), () => {
       const html = DashboardFormUI(billPending)
       document.body.innerHTML = html
+
       expect(screen.getByText("Accepter")).toBeTruthy()
       expect(screen.getByText("Refuser")).toBeTruthy()
       expect(screen.getByTestId("commentary2")).toBeTruthy()

@@ -17,10 +17,12 @@ export default class {
   }
 
   handleClickNewBill = () => {
+    //navigation
     this.onNavigate(ROUTES_PATH['NewBill'])
   }
 
   handleClickIconEye = (icon) => {
+    //Ouverture de la modale
     const billUrl = icon.getAttribute("data-bill-url")
     const imgWidth = Math.floor($('#modaleFile').width() * 0.5)
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`)
@@ -28,33 +30,34 @@ export default class {
   }
 
   getBills = () => {
+    //Récupère les infos du store
     if (this.store) {
       return this.store
-      .bills()
-      .list()
-      .then(snapshot => {
-        const bills = snapshot
-          .map(doc => {
-            try {
-              return {
-                ...doc,
-                date: formatDate(doc.date),
-                status: formatStatus(doc.status)
+        .bills()
+        .list()
+        .then(snapshot => {
+          const bills = snapshot
+            .map(doc => {
+              try {
+                return {
+                  ...doc,
+                  date: formatDate(doc.date),
+                  status: formatStatus(doc.status)
+                }
+              } catch (e) {
+                // if for some reason, corrupted data was introduced, we manage here failing formatDate function
+                // log the error and return unformatted date in that case
+                console.log(e, 'for', doc)
+                return {
+                  ...doc,
+                  date: doc.date,
+                  status: formatStatus(doc.status)
+                }
               }
-            } catch(e) {
-              // if for some reason, corrupted data was introduced, we manage here failing formatDate function
-              // log the error and return unformatted date in that case
-              console.log(e,'for',doc)
-              return {
-                ...doc,
-                date: doc.date,
-                status: formatStatus(doc.status)
-              }
-            }
-          })
+            })
           console.log('length', bills.length)
-        return bills
-      })
+          return bills
+        })
     }
   }
 }
